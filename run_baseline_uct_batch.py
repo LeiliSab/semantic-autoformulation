@@ -1,7 +1,7 @@
 """
-run_baseline_uct_batch.py
+run_baseline_exploring_uncertainties_batch.py
 
-Run multiple NL4OPT problems with baseline + UCT (uncertainty-augmented UCT, NO SAC).
+Run multiple NL4OPT problems with baseline + exploring uncertainties (uncertainty-augmented search, NO SAC).
 """
 
 from MCTS_used import MCTS
@@ -9,19 +9,10 @@ import pandas as pd
 import sys
 
 
-def run_problem_with_uct(problem_index, gamma=0.1):
-    """
-    Run a single problem with baseline (no SAC) but with uncertainty-augmented UCT.
+def run_problem_with_exploring_uncertainties(problem_index, gamma=0.1):
     
-    Parameters
-    ----------
-    problem_index : int
-        Problem number to solve
-    gamma : float
-        Weight for uncertainty term in UCT (default: 0.1)
-    """
     print(f"\n{'='*80}")
-    print(f"Running Problem {problem_index} with Baseline + UCT (gamma={gamma})")
+    print(f"Running Problem {problem_index} with Baseline + Exploring Uncertainties (gamma={gamma})")
     print(f"{'='*80}\n")
     
     # Load problem data
@@ -32,8 +23,8 @@ def run_problem_with_uct(problem_index, gamma=0.1):
     # Initialize MCTS with NO SAC but WITH uncertainty term
     mcts = MCTS(use_sac=False, gamma=gamma)
     
-    # Run DFS and save to UCT results folder (no SAC)
-    results_dir = f"NL4OPT_results_UCT/problem_{problem_index}"
+    # Run DFS and save to exploring_uncertainties results folder (no SAC)
+    results_dir = f"NL4OPT_results_exploring_uncertainties/problem_{problem_index}"
     
     try:
         mcts.dfs_from_scratch(problem_str, results_dir, ground_truth=ground_truth)
@@ -46,27 +37,18 @@ def run_problem_with_uct(problem_index, gamma=0.1):
 
 
 def run_batch(problem_ids, gamma=0.1):
-    """
-    Run multiple problems sequentially.
     
-    Parameters
-    ----------
-    problem_ids : list of int
-        List of problem indices to run
-    gamma : float
-        Uncertainty weight for UCT
-    """
     results = {}
     
     print(f"\n{'='*80}")
-    print(f"Batch Run: {len(problem_ids)} problems with Baseline + UCT (NO SAC)")
+    print(f"Batch Run: {len(problem_ids)} problems with Baseline + Exploring Uncertainties (NO SAC)")
     print(f"Problems: {problem_ids}")
     print(f"Gamma: {gamma}")
     print(f"{'='*80}\n")
     
     for i, problem_id in enumerate(problem_ids, 1):
         print(f"\n[{i}/{len(problem_ids)}] Starting problem {problem_id}...")
-        success = run_problem_with_uct(problem_id, gamma=gamma)
+        success = run_problem_with_exploring_uncertainties(problem_id, gamma=gamma)
         results[problem_id] = "Success" if success else "Failed"
     
     # Print summary

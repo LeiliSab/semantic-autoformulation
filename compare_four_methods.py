@@ -1,12 +1,4 @@
-"""
-compare_three_methods.py
 
-Compare results across four MCTS variants:
-1. Baseline (no SAC, no UCT)
-2. Baseline + UCT (uncertainty-augmented UCT, no SAC)
-3. SAC (Semantic Agreement Check, standard UCT)
-4. SAC + UCT (with uncertainty-augmented UCT)
-"""
 
 import json
 import pandas as pd
@@ -42,11 +34,7 @@ def check_correct(objective_str, gt_value, tolerance=0.0):
 
 
 def evaluate_method(results, ground_truth, tolerance=0.05):
-    """
-    Evaluate a single method.
-    
-    Returns dict with correct count, total count, and accuracy.
-    """
+   
     correct = sum(1 for r in results if check_correct(r.get("best_objective"), ground_truth, tolerance))
     total = len(results)
     accuracy = correct / total if total > 0 else 0.0
@@ -60,7 +48,7 @@ def evaluate_method(results, ground_truth, tolerance=0.05):
 
 def compare_three_methods(problem_ids=None, start=None, end=None):
     """
-    Compare baseline, baseline+UCT, SAC, and SAC+UCT across multiple problems.
+    Compare baseline, baseline+exploring_uncertainties, SAC, and SAC+exploring_uncertainties across multiple problems.
     """
     # Load ground truth
     try:
@@ -83,7 +71,7 @@ def compare_three_methods(problem_ids=None, start=None, end=None):
     print("\n" + "="*130)
     print("COMPARING FOUR METHODS - NL4OPT Problems")
     print("="*130 + "\n")
-    print(f"{'Problem':<10} {'Baseline':<20} {'UCT':<20} {'SAC':<20} {'SAC+UCT':<20} {'Best':<12}")
+    print(f"{'Problem':<10} {'Baseline':<20} {'Exploring Uncert.':<20} {'SAC':<20} {'SAC+Exp.Uncert.':<20} {'Best':<12}")
     print(f"{'ID':<10} {'Correct/Total (Acc%)':<20} {'Correct/Total (Acc%)':<20} {'Correct/Total (Acc%)':<20} {'Correct/Total (Acc%)':<20}")
     print("-"*130)
     
@@ -101,9 +89,9 @@ def compare_three_methods(problem_ids=None, start=None, end=None):
             continue
         
         baseline_results = load_all_results_jsonl("NL4OPT_results", problem_id)
-        uct_results = load_all_results_jsonl("NL4OPT_results_UCT", problem_id)
+        uct_results = load_all_results_jsonl("NL4OPT_results_exploring_uncertainties", problem_id)
         sac_results = load_all_results_jsonl("NL4OPT_results_SAC", problem_id)
-        sacuct_results = load_all_results_jsonl("NL4OPT_results_SAC_UCT", problem_id)
+        sacuct_results = load_all_results_jsonl("NL4OPT_results_SAC_exploring_uncertainties", problem_id)
         
         if not baseline_results and not uct_results and not sac_results and not sacuct_results:
             continue
