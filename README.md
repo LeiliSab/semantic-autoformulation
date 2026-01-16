@@ -1,43 +1,34 @@
-# Autoformulation of Mathematical Optimization Models Using LLMs
+# Results Data
 
-This repository contains the code of the paper
+I could not include result files due to their size and deep folder structures. 
 
-[Autoformulation of Mathematical Optimization Models Using LLMs](https://arxiv.org/pdf/2411.01679) published at ICML 2025
+## Generating Results
 
-<img src="figure-1.png" width="1000"/>
-
-## Overview
-
-The repository implements the **Autoformulation of mathematical to** formulate step by step. It includes scripts for two primary experimental tasks:
-
-- **MCTS**: Model formulating step by step mathematical optimization models. Including prunning, ranking self-evaluation, etc.
-- **DFS**: A way to construct a dense tree for ablation studies.
-
-
-
-### API keys
-
-For OpenAI models, place your key in `utils.py`.
-
-## Running experiments
-
-### NL4OPT
-
-Example of running the whole dataset NL4OPT.
+To reproduce the results, run the batch scripts:
 
 ```bash
-sh run_all_NLP
+# Baseline results
+python run_NL4OPT.py --index <problem_number>
+
+# Baseline + Exploring Uncertainties
+python run_baseline_uct_batch.py "21,24,25,26,27,28,29,30,31,32,33,34"
+
+# SAC results
+python run_NL4OPT.py --index <problem_number> --use-sac
+
+# SAC + Exploring Uncertainties
+python run_sac_uct_batch.py "21,24,25,26,27,28,29,30,31,32,33,34"
 ```
 
-The code is still not fully clean yet. However, all the components are here.
+Results will be saved to:
+- `NL4OPT_results/` - Baseline
+- `NL4OPT_results_exploring_uncertainties/` - Baseline + Exploring Uncertainties
+- `NL4OPT_results_SAC/` - SAC
+- `NL4OPT_results_SAC_exploring_uncertainties/` - SAC + Exploring Uncertainties
 
-## Citation
+## Key Result Files
 
-```bibtex
-@inproceedings{astorgaautoformulation,
-  title={Autoformulation of Mathematical Optimization Models Using LLMs},
-  author={Astorga, Nicol{\'a}s and Liu, Tennison and Xiao, Yuanzhang and van der Schaar, Mihaela},
-  booktitle={Forty-second International Conference on Machine Learning}
-}
-```
-
+Each problem folder contains:
+- `all_results.jsonl` - All formulation results and metrics
+- `all_results_path.json` - Tree structure of explored formulations
+- Individual formulation folders with code and evaluations
